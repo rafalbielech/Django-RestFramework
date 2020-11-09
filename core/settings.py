@@ -15,14 +15,11 @@ import environ
 import json
 from datetime import timedelta
 
-env = environ.Env(
-    ' set casting, default value' 
-    DEBUG=(bool, False)
-)
-' reading .env file ' 
+env = environ.Env(DEBUG=(bool, False))
+" reading .env file "
 environ.Env.read_env()
 
-' Build paths inside the project like this: os.path.join(BASE_DIR, ...) '
+" Build paths inside the project like this: os.path.join(BASE_DIR, ...) "
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
@@ -30,7 +27,7 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 " Load the general configuration file, else {} "
 config_file_path = os.path.join(BASE_DIR, "..", "conf.json")
-CONFIG = json.load(open(config_file_path)) if config_file_path.exists() else {}
+CONFIG = json.load(open(config_file_path)) if os.path.exists(config_file_path) else {}
 
 
 # Application definition
@@ -111,7 +108,7 @@ else:
             "USER": env("DB_USER"),
             "PASSWORD": env("DB_PASSWORD"),
             "HOST": env("DB_HOST"),
-            "PORT": env("DB_PORT")
+            "PORT": env("DB_PORT"),
         }
     }
 

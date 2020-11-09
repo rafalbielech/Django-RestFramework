@@ -1,0 +1,11 @@
+db.sqlite3*
+*__pycache__
+.vscode
+*.DS_Store
+
+logs
+run
+core/.env
+*/migrations
+gunicorn_start
+
