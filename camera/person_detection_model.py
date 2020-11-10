@@ -6,7 +6,6 @@ import json
 import cv2
 import logging
 import numpy as np
-from imutils.video import VideoStream
 from threading import Thread
 from queue import Queue
 from .models import *
@@ -223,27 +222,27 @@ class PersonDetection:
             )
 
         if type == "picamera":
-            vs = VideoStream(src=0).start()
+            cap = cv2.VideoCapture(0)
         elif type == "rtsp":
-            vs = VideoStream(src=url).start()
+            cap = cv2.VideoCapture(url)
 
         while True:
-            frame_original = vs.read()
+            ret, frame = cap.read()
 
             " check if the frame has to flipped "
             if to_flip == "T":
-                frame_original = cv2.flip(frame_original, 0)
+                frame = cv2.flip(frame, 0)
 
             " if the input queue *is* empty, give the current frame to "
-            if frame_original is None:
+            if ret is False:
                 logger.error("[ERROR] breaking process at {}".format(datetime.datetime.now()))
                 break
             else:
                 if self.inputQueue.empty():
-                    self.inputQueue.put(frame_original)
+                    self.inputQueue.put(frame)
 
         logger.error("[ERROR] encountered, killing thread ...")
-        vs.stop()
+        cap.release()
 
         if not self.messageQueue.full():
             self.messageQueue.put(

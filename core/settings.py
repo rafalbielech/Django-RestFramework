@@ -30,6 +30,7 @@ config_file_path = os.path.join(BASE_DIR, "..", "conf.json")
 CONFIG = json.load(open(config_file_path)) if os.path.exists(config_file_path) else {}
 
 
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
