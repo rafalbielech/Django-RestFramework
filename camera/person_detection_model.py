@@ -145,7 +145,10 @@ class PersonDetection:
                         file_path = self.detectionQueue.get()
                         msg.attach_file(file_path)
                         frame_list += 1
-
+                        try:
+                            os.remove(file_path)
+                        except:
+                            continue
                     except:
                         continue
                 msg.send()
