@@ -30,7 +30,6 @@ config_file_path = os.path.join(BASE_DIR, "..", "conf.json")
 CONFIG = json.load(open(config_file_path)) if os.path.exists(config_file_path) else {}
 
 
-
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -235,3 +234,13 @@ LOGGING = {
         },
     },
 }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "emails")
+EMAIL_USE_TLS = True
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = "RestFramework Home"

@@ -1,18 +1,14 @@
+from django.utils.timezone import now
+from django.core.mail import EmailMessage
+from .models import *
 import sys
 import os
 import time
-import datetime
-import json
 import cv2
 import logging
 import numpy as np
 from threading import Thread
 from queue import Queue
-from .models import *
-
-sys.path.append(os.path.join(sys.path[0]))
-import utils as utilities
-
 
 CLASSES = [
     "background",
@@ -129,35 +125,55 @@ class PersonDetection:
         process.
         """
         min_size = self.configuration.get("surveillance_setting", {}).get("min_motion_frames", 3)
-        frame_list = []
+        frame_list = 0
         while True:
             if not self.detectionQueue.empty() and self.detectionQueue.qsize() >= min_size:
                 """
                 If there are enogh items in the detection queue, then append them to a list
                 and pass that list to function to send out
                 """
+                msg = EmailMessage(
+                    "Notification from {} camera".format(self.configuration.get("local").get("alias")),
+                    "Attached are images that have been detected with people \n",
+                    self.configuration.get("config", {}).get("email_address", None),
+                    [self.configuration.get("config", {}).get("email_address", None)],
+                )
+                msg.content_subtype = "html"
                 for _ in range(self.detectionQueue.qsize()):
                     try:
-                        frame_list.append(self.detectionQueue.get())
+                        " add the captured file to the message "
+                        file_path = self.detectionQueue.get()
+                        msg.attach_file(file_path)
+                        frame_list += 1
+
                     except:
                         continue
-
-                utilities.send_alert_email(self.configuration, frame_list)
+                msg.send()
 
                 if not self.detectionMessageQueue.full():
                     self.detectionMessageQueue.put(
                         {
-                            "num_of_captures": len(frame_list),
+                            "num_of_captures": frame_list,
                             "email": self.configuration.get("config", {}).get("email_address", "empty@gmail.com"),
                         }
                     )
                 " Empty the framelist "
-                frame_list.clear()
+                frame_list = 0
             else:
                 " Just sleep to avoid overflow "
                 time.sleep(self.configuration.get("surveillance_setting", {}).get("detection_sleep_time", 1))
 
     def classify_frame(self):
+        def format_datetime(string):
+            """
+            Replace all characters used to break up sentence with underscore
+            Will be used to save a sentence later
+            """
+            temp = str(string)
+            for item in ["-", " ", ":", "."]:
+                temp = temp.replace(item, "_")
+            return temp
+
         """
         Keep looping, if the input queue is not empty, then take that frame and try to classify it
         """
@@ -195,7 +211,7 @@ class PersonDetection:
                             if not self.detectionQueue.full():
                                 image_name = self.configuration["surveillance_setting"][
                                     "frame_file_path"
-                                ] + "{}.jpg".format(utilities.format_datetime(datetime.datetime.now()))
+                                ] + "{}.jpg".format(now().strftime("%d_%m_%Y_at_%H_%M_%S"))
 
                                 cv2.imwrite(image_name, frame_original)
                                 self.detectionQueue.put(image_name)
@@ -235,7 +251,7 @@ class PersonDetection:
 
             " if the input queue *is* empty, give the current frame to "
             if ret is False:
-                logger.error("[ERROR] breaking process at {}".format(datetime.datetime.now()))
+                logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
                 break
             else:
                 if self.inputQueue.empty():
