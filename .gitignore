@@ -9,3 +9,5 @@ core/.env
 */migrations
 gunicorn_start
 
+._*
+
