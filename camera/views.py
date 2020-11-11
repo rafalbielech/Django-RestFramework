@@ -69,6 +69,10 @@ class StartSurveillance(APIView):
         operation_summary="Start surveillance",
         operation_description="Start surveillance system \n Input : Delay (seconds) default 15 \n Returns : status",
         manual_parameters=[delay_param],
+        responses={
+            200: '{"success": "Boolean", "status": "String", "start_time": "Datetime object"}',
+            404: "You are not authorized to see this content",
+        },
     )
     def post(self, request):
         """
@@ -154,6 +158,10 @@ class StopSurveillance(APIView):
     @swagger_auto_schema(
         operation_summary="Stop surveillance",
         operation_description="Stop surveillance system \n Input : None \n Returns : status",
+        responses={
+            200: '{"success": "Boolean", "status": "String", "stop_time": "Datetime object"}',
+            404: "You are not authorized to see this content",
+        },
     )
     def post(self, request):
         """
@@ -223,6 +231,7 @@ class StatusViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_summary="System status",
         operation_description="Return system status \n Input : None \n Returns : camera history",
+        responses={200: cameraStatusSerializer(many=False), 404: "You are not authorized to see this content"},
     )
     def list(self, request):
         token = get_authorization_header(request).decode("utf-8")
@@ -255,6 +264,7 @@ class DetectionViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_summary="Surveillance system detections",
         operation_description="Return detection history \n Input : None \n Returns : camera detection history",
+        responses={200: cameraDetectionSerializer(many=True), 404: "You are not authorized to see this content"},
     )
     def list(self, request):
         token = get_authorization_header(request).decode("utf-8")
@@ -287,6 +297,7 @@ class HistoryViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_summary="Surveillance commands history",
         operation_description="Return history of called commands \n Input : None \n Returns : camera command history",
+        responses={200: cameraHistorySerializer(many=True), 404: "You are not authorized to see this content"},
     )
     def list(self, request):
         token = get_authorization_header(request).decode("utf-8")
@@ -319,6 +330,7 @@ class MessageViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_summary="Messsage passing activity",
         operation_description="Return messages that have been recorded \n Input : None \n Returns : list of messages",
+        responses={200: messageSerializer(many=True), 404: "You are not authorized to see this content"},
     )
     def list(self, request):
         token = get_authorization_header(request).decode("utf-8")
@@ -351,6 +363,7 @@ class ThreadActivityViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_summary="Thread activity",
         operation_description="Return recorded thread activity  \n Input : None \n Returns : list of activities",
+        responses={200: threadActivitySerializer(many=True), 404: "You are not authorized to see this content"},
     )
     def list(self, request):
         token = get_authorization_header(request).decode("utf-8")
