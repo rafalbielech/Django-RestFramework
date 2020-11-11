@@ -29,7 +29,7 @@ def redirect_to_docs(request):
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Home automation | Ubuntu | by Rafał Bielech",
+        title="Home automation | {} | by Rafał Bielech".format(settings.CONFIG.get("local", {}).get("alias", "EMPTY")),
         default_version="v1",
         description="Home Automation API for {}\n This project originated to create an API responsible for monitoring internally developed surveillance system and node parameters. \nAuthentication methods : Basic & Bearer token \n<hr>\n<a target='_blank' href='https://rafalbielech.github.io'>Learn more about developer</a>".format(
             settings.CONFIG.get("local", {}).get("alias", "EMPTY")
