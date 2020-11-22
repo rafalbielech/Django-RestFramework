@@ -106,7 +106,7 @@ class StartSurveillance(APIView):
         except:
             raise PermissionDenied()
 
-        if not camera_status.status:
+        if not psutil.pid_exists(camera_status.pid):
             try:
                 ## start the process
                 process = multiprocessing.Process(
@@ -123,11 +123,12 @@ class StartSurveillance(APIView):
                 history_item = CameraHistory(
                     user=originator,
                     update_timestamp=datetime.datetime.now(),
-                    command="start_camera",
+                    command="Start camera",
                 )
                 history_item.save()
 
                 return_data["success"] = True
+                return_data["system_running"] = True
                 return_data["status"] = "System is executing {}".format(camera_status.pid)
                 return_data["start_time"] = (datetime.datetime.now() + datetime.timedelta(seconds=delay)).strftime(
                     "%m/%d/%Y, %H:%M:%S"
@@ -135,12 +136,13 @@ class StartSurveillance(APIView):
 
             except Exception as e:
                 return_data["success"] = False
-                return_data["status"] = "Encountered ERROR while starting new process - {}".format(e)
+                return_data["system_running"] = False
+                return_data["status"] = "ERROR while starting new process - {}".format(e)
 
         else:
             return_data["success"] = False
+            return_data["system_running"] = True
             return_data["status"] = "System is already running"
-
         return Response(return_data, status=status.HTTP_200_OK)
 
 
@@ -150,6 +152,8 @@ class StopSurveillance(APIView):
     """
 
     def kill_all_process(self, pid):
+        " First kill all of the pid children "
+        " Then, kill the parent process "
         parent = psutil.Process(pid)
         for child in parent.children(recursive=True):
             child.kill()
@@ -193,7 +197,7 @@ class StopSurveillance(APIView):
         except:
             raise PermissionDenied()
 
-        if camera_status.status:
+        if psutil.pid_exists(camera_status.pid):
             try:
                 self.kill_all_process(int(camera_status.pid))
 
@@ -205,21 +209,23 @@ class StopSurveillance(APIView):
                 history_item = CameraHistory(
                     user=originator,
                     update_timestamp=datetime.datetime.now(),
-                    command="stop_camera",
+                    command="Stop camera",
                 )
                 history_item.save()
 
                 return_data["success"] = True
-                return_data["status"] = "System stopped"
+                return_data["status"] = "System stopped ..."
+                return_data["running"] = False
                 return_data["stop_time"] = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
             except Exception as e:
                 return_data["success"] = False
-                return_data["status"] = "Encountered ERROR stopping system- {}".format(e)
+                return_data["running"] = True
+                return_data["status"] = "ERROR while stopping system - {}".format(e)
         else:
             return_data["success"] = False
+            return_data["running"] = False
             return_data["status"] = "System was off"
-
         return Response(return_data, status=status.HTTP_200_OK)
 
 
@@ -251,9 +257,12 @@ class StatusViewSet(viewsets.ViewSet):
                     obj.save()
         except:
             raise PermissionDenied()
-        queryset = CameraStatus.objects.get()
-        serializer = cameraStatusSerializer(queryset, many=False)
-        return Response(serializer.data)
+
+        camera_status = get_object_or_404(CameraStatus)
+        serializer = cameraStatusSerializer(camera_status, many=False)
+        serializer_data = serializer.data
+        serializer_data["system_running"] = psutil.pid_exists(int(serializer_data.get("pid")))
+        return Response(serializer_data)
 
 
 class DetectionViewSet(viewsets.ViewSet):

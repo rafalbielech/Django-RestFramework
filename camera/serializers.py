@@ -5,7 +5,7 @@ from .models import *
 class cameraDetectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CameraDetection
-        fields = ["calling_process", "timestamp", "num_of_captures", "receiver_address"]
+        fields = "__all__"
 
 
 class cameraStatusSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class cameraStatusSerializer(serializers.ModelSerializer):
 class cameraHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CameraHistory
-        fields = ["user", "command", "update_timestamp"]
+        fields = "__all__"
 
 
 class messageSerializer(serializers.ModelSerializer):
