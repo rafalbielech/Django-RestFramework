@@ -240,37 +240,46 @@ class PersonDetection:
                 }
             )
 
-        if type == "picamera":
-            cap = cv2.VideoCapture(0)
-        elif type == "rtsp":
-            cap = cv2.VideoCapture(url)
-
         while True:
-            ret, frame = cap.read()
 
-            " check if the frame has to flipped "
-            if to_flip == "T":
-                frame = cv2.flip(frame, 0)
+            if type == "picamera":
+                cap = cv2.VideoCapture(0)
+            elif type == "rtsp":
+                cap = cv2.VideoCapture(url)
 
-            " if the input queue *is* empty, give the current frame to "
-            if ret is False:
-                logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
-                break
-            else:
-                if self.inputQueue.empty():
-                    self.inputQueue.put(frame)
+            if not self.messageQueue.full():
+                self.messageQueue.put(
+                    {
+                        "function": "person_detection.start_capture()",
+                        "message": "Starting {} capture".format(type),
+                    }
+                )
 
-        logger.error("[ERROR] encountered, killing thread ...")
-        cap.release()
+            while True:
+                ret, frame = cap.read()
 
-        if not self.messageQueue.full():
-            self.messageQueue.put(
-                {
-                    "function": "person_detection.start_capture()",
-                    "message": "Exiting {} capture due to error".format(type),
-                }
-            )
-        sys.exit()
+                " check if the frame has to flipped "
+                if to_flip == "T":
+                    frame = cv2.flip(frame, 0)
+
+                " if the input queue *is* empty, give the current frame to "
+                if ret is False:
+                    logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
+                    break
+                else:
+                    if self.inputQueue.empty():
+                        self.inputQueue.put(frame)
+
+            logger.error("[ERROR] encountered, killing thread ...")
+            cap.release()
+
+            if not self.messageQueue.full():
+                self.messageQueue.put(
+                    {
+                        "function": "person_detection.start_capture()",
+                        "message": "Exiting {} capture due to error".format(type),
+                    }
+                )
 
     def start_system(self, delay):
         try:
