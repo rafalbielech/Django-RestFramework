@@ -48,7 +48,6 @@ class PersonDetection:
         """
         inputQueue holds up to 1 frame, that will then we sent to the thread that performs detection
         detectionQueue is a queue that holds detections after they have been classifed, email thread takes from this queue
-
         detectionMessageQueue, messageQueue, and threadQueue will hold messages that will be saved into the database
         Reason : DB lock error with threads reusing connection
         """
@@ -69,7 +68,7 @@ class PersonDetection:
         try:
             model = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
         except Exception as e:
-            logger.error("load_files : {}".format(e))
+            logger.exception("load_files : {}".format(e))
         finally:
             return model
 
@@ -240,46 +239,37 @@ class PersonDetection:
                 }
             )
 
+        if type == "picamera":
+            cap = cv2.VideoCapture(0)
+        elif type == "rtsp":
+            cap = cv2.VideoCapture(url)
+
         while True:
+            ret, frame = cap.read()
 
-            if type == "picamera":
-                cap = cv2.VideoCapture(0)
-            elif type == "rtsp":
-                cap = cv2.VideoCapture(url)
+            " check if the frame has to flipped "
+            if to_flip == "T":
+                frame = cv2.flip(frame, 0)
 
-            if not self.messageQueue.full():
-                self.messageQueue.put(
-                    {
-                        "function": "person_detection.start_capture()",
-                        "message": "Starting {} capture".format(type),
-                    }
-                )
+            " if the input queue *is* empty, give the current frame to "
+            if ret is False:
+                logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
+                break
+            else:
+                if self.inputQueue.empty():
+                    self.inputQueue.put(frame)
 
-            while True:
-                ret, frame = cap.read()
-                
+        logger.error("[ERROR] encountered, killing thread ...")
+        cap.release()
 
-                " if the input queue *is* empty, give the current frame to "
-                if ret is False:
-                    logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
-                    break
-                else:
-                    if self.inputQueue.empty():
-                        " check if the frame has to flipped "
-                        if to_flip == "T":
-                            frame = cv2.flip(frame, 0)
-                        self.inputQueue.put(frame)
-
-            logger.error("[ERROR] encountered, killing thread ...")
-            cap.release()
-
-            if not self.messageQueue.full():
-                self.messageQueue.put(
-                    {
-                        "function": "person_detection.start_capture()",
-                        "message": "Exiting {} capture due to error".format(type),
-                    }
-                )
+        if not self.messageQueue.full():
+            self.messageQueue.put(
+                {
+                    "function": "person_detection.start_capture()",
+                    "message": "Exiting {} capture due to error".format(type),
+                }
+            )
+        sys.exit()
 
     def start_system(self, delay):
         try:
@@ -378,56 +368,56 @@ class PersonDetection:
         dm.start()
         threads.append({"thread": dm, "type": "detectionMessage"})
 
-        # while True:
-        #     for index, t in enumerate(threads):
-        #         if not t["thread"].is_alive():
-        #             if t["type"] == "classify":
-        #                 c = Thread(target=self.classify_frame)
-        #                 c.daemon = True
-        #                 c.start()
-        #                 threads[index] = {"thread": c, "type": "classify"}
-        #                 self.threadQueue.put({"thread_type": "classify", "restart": True})
+        while True:
+            for index, t in enumerate(threads):
+                if not t["thread"].is_alive():
+                    if t["type"] == "classify":
+                        c = Thread(target=self.classify_frame)
+                        c.daemon = True
+                        c.start()
+                        threads[index] = {"thread": c, "type": "classify"}
+                        self.threadQueue.put({"thread_type": "classify", "restart": True})
 
-        #             elif t["type"] == "email":
-        #                 e = Thread(target=self.send_detections)
-        #                 e.daemon = True
-        #                 e.start()
-        #                 threads[index] = {"thread": e, "type": "email"}
-        #                 self.threadQueue.put({"thread_type": "email", "restart": True})
+                    elif t["type"] == "email":
+                        e = Thread(target=self.send_detections)
+                        e.daemon = True
+                        e.start()
+                        threads[index] = {"thread": e, "type": "email"}
+                        self.threadQueue.put({"thread_type": "email", "restart": True})
 
-        #             elif t["type"] == "capture":
-        #                 capture_type = t["capture_type"]
-        #                 url = t.get("url", "")
+                    elif t["type"] == "capture":
+                        capture_type = t["capture_type"]
+                        url = t.get("url", "")
 
-        #                 if capture_type == "picamera":
-        #                     cc = Thread(
-        #                         target=self.start_capture,
-        #                         args=(
-        #                             capture_type,
-        #                             flip,
-        #                         ),
-        #                     )
-        #                 elif capture_type == "rtsp":
-        #                     cc = Thread(
-        #                         target=self.start_capture,
-        #                         args=(
-        #                             capture_type,
-        #                             flip,
-        #                             url,
-        #                         ),
-        #                     )
-        #                 cc.daemon = True
-        #                 cc.start()
-        #                 threads[index] = {
-        #                     "thread": cc,
-        #                     "capture_type": capture_type,
-        #                     "url": url,
-        #                     "type": "capture",
-        #                 }
+                        if capture_type == "picamera":
+                            cc = Thread(
+                                target=self.start_capture,
+                                args=(
+                                    capture_type,
+                                    flip,
+                                ),
+                            )
+                        elif capture_type == "rtsp":
+                            cc = Thread(
+                                target=self.start_capture,
+                                args=(
+                                    capture_type,
+                                    flip,
+                                    url,
+                                ),
+                            )
+                        cc.daemon = True
+                        cc.start()
+                        threads[index] = {
+                            "thread": cc,
+                            "capture_type": capture_type,
+                            "url": url,
+                            "type": "capture",
+                        }
 
-        #                 self.threadQueue.put(
-        #                     {"thread_type": "capture", "attribute_1": capture_type, "attribute_2": url, "restart": True}
-        #                 )
+                        self.threadQueue.put(
+                            {"thread_type": "capture", "attribute_1": capture_type, "attribute_2": url, "restart": True}
+                        )
 
-        #             logger.error("After restarting threads - {}".format(threads))
-        #     time.sleep(60 * 0.25)
+                    logger.error("After restarting threads - {}".format(threads))
+            time.sleep(60 * 0.25)
