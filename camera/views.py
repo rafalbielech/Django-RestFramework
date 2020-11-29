@@ -106,7 +106,7 @@ class StartSurveillance(APIView):
         except:
             raise PermissionDenied()
 
-        if not psutil.pid_exists(int(camera_status.pid)):
+        if not psutil.pid_exists(camera_status.pid):
             try:
                 ## start the process
                 process = multiprocessing.Process(
@@ -197,7 +197,7 @@ class StopSurveillance(APIView):
         except:
             raise PermissionDenied()
 
-        if psutil.pid_exists(int(camera_status.pid)):
+        if psutil.pid_exists(camera_status.pid):
             try:
                 self.kill_all_process(int(camera_status.pid))
 
