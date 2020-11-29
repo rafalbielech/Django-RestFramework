@@ -69,7 +69,7 @@ class PersonDetection:
         try:
             model = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
         except Exception as e:
-            logger.exception("load_files : {}".format(e))
+            logger.error("load_files : {}".format(e))
         finally:
             return model
 
@@ -257,6 +257,7 @@ class PersonDetection:
 
             while True:
                 ret, frame = cap.read()
+                
 
                 " if the input queue *is* empty, give the current frame to "
                 if ret is False:
