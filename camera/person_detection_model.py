@@ -84,7 +84,7 @@ class PersonDetection:
                     message=saved_message.get("message", "no message"),
                 )
                 m.save()
-                time.sleep(1)
+                time.sleep(3)
 
     def detectionMessagePasser(self):
         """
@@ -99,7 +99,7 @@ class PersonDetection:
                     receiver_address=saved_message.get("email", "empty@gmail.com"),
                 )
                 d.save()
-                time.sleep(1)
+                time.sleep(3)
 
     def threadActivityPasser(self):
         """
@@ -115,7 +115,7 @@ class PersonDetection:
                     restart=saved_message.get("restart", False),
                 )
                 ta.save()
-                time.sleep(1)
+                time.sleep(3)
 
     def send_detections(self):
         """
@@ -132,8 +132,8 @@ class PersonDetection:
                 and pass that list to function to send out
                 """
                 msg = EmailMessage(
-                    "Notification from {} camera".format(self.configuration.get("local").get("alias")),
-                    "Attached are images that have been detected with people \n",
+                    "Notification from {}".format(self.configuration.get("local").get("alias")),
+                    "Attached are images that have been detected with people \n\n\n",
                     self.configuration.get("config", {}).get("email_address", None),
                     [self.configuration.get("config", {}).get("email_address", None)],
                 )
@@ -166,16 +166,6 @@ class PersonDetection:
                 time.sleep(self.configuration.get("surveillance_setting", {}).get("detection_sleep_time", 1))
 
     def classify_frame(self):
-        def format_datetime(string):
-            """
-            Replace all characters used to break up sentence with underscore
-            Will be used to save a sentence later
-            """
-            temp = str(string)
-            for item in ["-", " ", ":", "."]:
-                temp = temp.replace(item, "_")
-            return temp
-
         """
         Keep looping, if the input queue is not empty, then take that frame and try to classify it
         """
@@ -231,45 +221,38 @@ class PersonDetection:
         If the input queue is empty, then add the frame to the queue
         to be classified
         """
-        if not self.messageQueue.full():
-            self.messageQueue.put(
-                {
-                    "function": "person_detection.start_capture",
-                    "message": "Starting {} capture from {}".format(type, url),
-                }
-            )
-
-        if type == "picamera":
-            cap = cv2.VideoCapture(0)
-        elif type == "rtsp":
-            cap = cv2.VideoCapture(url)
-
+        cap = None
         while True:
-            ret, frame = cap.read()
+            if not self.messageQueue.full():
+                self.messageQueue.put(
+                    {
+                        "function": "person_detection.start_capture",
+                        "message": "Starting {} capture from {}".format(type, url),
+                    }
+                )
 
-            " check if the frame has to flipped "
-            if to_flip == "T":
-                frame = cv2.flip(frame, 0)
+            if type == "picamera":
+                cap = cv2.VideoCapture(0)
+            elif type == "rtsp":
+                cap = cv2.VideoCapture(url)
 
-            " if the input queue *is* empty, give the current frame to "
-            if ret is False:
-                logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
-                break
-            else:
-                if self.inputQueue.empty():
-                    self.inputQueue.put(frame)
+            while True:
+                ret, frame = cap.read()
 
-        logger.error("[ERROR] encountered, killing thread ...")
-        cap.release()
+                " if the input queue *is* empty, give the current frame to "
+                if ret:
+                    if self.inputQueue.empty():
+                        " check if the frame has to flipped "
+                        if to_flip == "T":
+                            frame = cv2.flip(frame, 0)
 
-        if not self.messageQueue.full():
-            self.messageQueue.put(
-                {
-                    "function": "person_detection.start_capture()",
-                    "message": "Exiting {} capture due to error".format(type),
-                }
-            )
-        sys.exit()
+                        self.inputQueue.put(frame)
+                else:
+                    logger.error("[ERROR] breaking process at {}".format(now().strftime("%d_%m_%Y_at_%H_%M_%S")))
+                    break
+
+            logger.error("[ERROR] encountered, killing thread ...")
+            cap.release()
 
     def start_system(self, delay):
         try:
@@ -420,4 +403,4 @@ class PersonDetection:
                         )
 
                     logger.error("After restarting threads - {}".format(threads))
-            time.sleep(60 * 0.25)
+            time.sleep(60 * 5)
