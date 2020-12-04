@@ -10,7 +10,7 @@ urlpatterns = [
 ]
 
 if len(settings.CONFIG.get("local", {}).get("rtsp_camera", [])) >= 1:
-    urlpatterns += path("action/rtsp/status", getRTSPcamstatus)
+    urlpatterns += [path("action/rtsp/status", getRTSPcamstatus)]
 
 router = routers.DefaultRouter()
 router.register(r"detection", DetectionViewSet, basename="detection")
