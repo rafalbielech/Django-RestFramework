@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import get_authorization_header
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 import psutil
@@ -15,6 +16,7 @@ from .prep import *
 from .serializers import *
 from jwtauth.models import *
 from .models import *
+from scapy.all import *
 
 delay_param = openapi.Parameter(
     "delay",
@@ -24,6 +26,37 @@ delay_param = openapi.Parameter(
     enum=[0, 15, 30, 90, 180],
     type=openapi.TYPE_STRING,
 )
+
+
+@api_view(["GET"])
+def getRTSPcamstatus(request):
+    """
+    Get RTSP camera status
+    """
+    token = get_authorization_header(request).decode("utf-8")
+    " token_list[0] is either Basic or Bearer token_list[1] is actual token "
+    token_list = token.split(" ")
+
+    try:
+        " If it is a JWT token, then check if this is still valid "
+        if "Bearer" in token_list:
+            obj = get_object_or_404(AccessToken, access_token=token_list[1])
+
+            if not obj.valid:
+                raise PermissionDenied()
+            else:
+                " Get the originator & update last_used date "
+                obj.last_used = datetime.datetime.now()
+                obj.save()
+    except:
+        raise PermissionDenied()
+
+    rtsp_cameras_on_network = [
+        item.get("id")
+        for item in settings.CONFIG.get("local", {}).get("rtsp_camera", [])
+        if getmacbyip(item.get("ip")) != None
+    ]
+    return Response(rtsp_cameras_on_network, status=status.HTTP_200_OK)
 
 
 @api_view(["PUT"])
