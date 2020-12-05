@@ -16,7 +16,7 @@ from .prep import *
 from .serializers import *
 from jwtauth.models import *
 from .models import *
-from scapy.all import *
+from scapy.all import getmacbyip
 
 delay_param = openapi.Parameter(
     "delay",
@@ -48,6 +48,8 @@ def getRTSPcamstatus(request):
                 " Get the originator & update last_used date "
                 obj.last_used = datetime.datetime.now()
                 obj.save()
+        elif "Basic" in token_list:
+            originator = request.user
     except:
         raise PermissionDenied()
 
@@ -83,6 +85,8 @@ def reset_status(request):
                 " Get the originator & update last_used date "
                 obj.last_used = datetime.datetime.now()
                 obj.save()
+        elif "Basic" in token_list:
+            originator = request.user
     except:
         raise PermissionDenied()
     camera_status.status = False
