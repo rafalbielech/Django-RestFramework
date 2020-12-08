@@ -1,131 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="Rafał Bielech" />
-        <title>Django RestFramework - Rafał Bielech</title>
-        <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicon/favicon-16x16.png">
-        <link rel="manifest" href="./assets/img/favicon/site.webmanifest">
-        <link rel="mask-icon" href="./assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
-        <link rel="shortcut icon" href="./assets/img/favicon/favicon.ico">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="msapplication-config" content="./assets/img/favicon/browserconfig.xml">
-        <meta name="theme-color" content="#ffffff">        
-        <script src="js/fontawesome-all.js"></script>
-        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
-            <a class="navbar-brand js-scroll-trigger" href="#page-top">
-                <span class="d-block d-lg-none">Rafał Bielech</span>
-                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="assets/img/me_icon.jpg" alt="" /></span>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#documentation">Web portal & Documentation</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#streamcapture">Capture and Classify</a></li>
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#djangomodels">Django Models & Authentication</a></li>
-                </ul>
-            </div>
-        </nav>
 
-        
-        <div class="container-fluid p-0">
-            <section class="information-section" id="about" style="align-items: center;">
-                <div class="information-section-content">
-                    <h2 class="mb-0">
-                        RestFramework built with 
-                        <span class="text-primary">Django</span>
-                        and 
-                        <span class="text-primary">JWT</span>
-                    </h2>
-                    <div class="subheading mb-2">
-                        Code is made available on <a target="_blank" href="https://github.com/rafalbielech/Django-RestFramework">Github</a>, executing on home network deployed with Gunicorn and Nginx.
-                    </div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="Rafał Bielech" />
+    <title>Django RestFramework - Rafał Bielech</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./assets/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="./assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="./assets/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="./assets/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <script src="js/fontawesome-all.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet"
+        type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
 
-                    <div class="social-icons mt-2">
-                        <a class="social-icon" title="Project page" target="_blank" href="https://rafalbielech.github.io/projects/"><i class="fab fas fa-laptop-code"></i></a>
-                        <a class="social-icon" title="GitHub" target="_blank" href="https://github.com/rafalbielech/Django-RestFramework"><i class="fab fa-github"></i></a>
-                    </div>
-
-                    <div class="text-muted mt-5 mb-2">This project was designed to operate home-grown surveillance system and collect node parameters (running on Raspberry PI 3b+ and Ubuntu Server) while maintaining microservice architecture. This enables surveillance system to be incorporated with Siri, Alexa, and other virtual assistants because authentication is done using JWT. A seperate <a target="_blank" href="https://github.com/rafalbielech/Django-Home-application">web portal</a> was built to operate and visualize parameters.</div>
-                    
-                    <div class="subheading text-primary mb-1">Programming Languages, Tools & Platforms</div>
-                    <ul class="list-inline dev-icons">
-                        <li class="list-inline-item"><i class="fab fa-python"></i></li>
-                        <li class="list-inline-item"><i class="fab fa-html5"></i></li>
-                        <li class="list-inline-item"><i class="fab fa-css3-alt"></i></li>
-                        <li class="list-inline-item"><i class="fab fa-js-square"></i></li>
-                        <li class="list-inline-item"><i class="fab fa-ubuntu"></i></li>
-                        <li class="list-inline-item"><i class="fab fa-raspberry-pi"></i></li>
-
-                    </ul>
-
-                </div>
-            </section>
-            <hr class="m-0" />
-            <section class="information-section" id="documentation">
-                <div class="information-section-content">
-                    <h2 class="mb-2">Web portal & Documentation</h2>
-                    <hr>
-                    <div class="d-flex mb-5">
-                        <div class="row">
-                            <div class="col-12 col-lg-6 col-xl-6 mb-4">
-                                <p>RF documentation was done with Swagger which enables interacting with the routes in the web portal. The application was built with Basic and Bearer authentication and anyone can either log in or provide their Bearer token to see results for each route.</p>
-                                <p>/camera route is responsible for starting/stopping and providing supporting information like when history of detections, commands, and messages (messages are a way to store information  from the working threads when RTSP capture has to reset and other information).</p>
-                                <p>/parameter is responsible for saving and retrieving general node parameters like CPU utilization, temp, memory etc but also information pertaining to internet speed. </p>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-4">
-                                <img src="./assets/img/main_screen.jpg" class="img-fluid" style="object-fit: cover" alt="Responsive image">
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-2">
-                                <img src="./assets/img/screen2.jpg" class="img-fluid" style="max-height : 800px; object-fit: cover" alt="Responsive image">
-                             </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-2">
-                                <p>Swagger makes it simple to add IN-QUERY parameters like "delay" in the adjacent image which has available values of 0, 15, 30, 90, and 180 seconds. The authentication tokens are passed by default in the HEADER. </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <hr class="m-0" />
-            <section class="information-section" id="streamcapture">
-                <div class="information-section-content">
-                    <h2 class="mb-2">Capture and Classify</h2>
-                    <hr>
-                    <div class="d-flex mb-5">
-                        <div class="row">
-                            <div class="col-12 col-lg-6 col-xl-6 mb-4">
-                                <p></p>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-4">
-                                <video width="320" height="240" controls>
-                                    <source src="./assets/img/supplemental/black_friday_output.mp4" type=video/mp4>
-                                </video>
-                            </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-2">
-                                <img src="./assets/img/screen2.jpg" class="img-fluid" style="max-height : 200px ; object-fit: cover" alt="Responsive image">
-                             </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-2">
-                                <p>Swagger makes it simple to add IN-QUERY parameters like "delay" in the adjacent image which has available values of 0, 15, 30, 90, and 180 seconds. The authentication tokens are passed by default in the HEADER. </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">
+            <span class="d-block d-lg-none">Django RestFramework</span>
+            <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2"
+                    src="assets/img/me_icon.jpg" alt="" /></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#documentation">Web portal &
+                        Documentation</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#streamcapture">Capture and
+                        Classify</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#djangomodels">Django Models &
+                        Authentication</a></li>
+            </ul>
         </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/jquery.easing.min.js"></script>
-        <script src="js/scripts.js"></script>
-    </body>
+    </nav>
+
+
+    <div class="container-fluid p-0">
+        <section class="information-section" id="about" style="align-items: center;">
+            <div class="information-section-content">
+                <h2 class="mb-0">
+                    RestFramework built with
+                    <span class="text-primary">Django</span>
+                    and
+                    <span class="text-primary">JWT</span>
+                </h2>
+                <div class="subheading mb-2">
+                    Code is made available on <a target="_blank"
+                        href="https://github.com/rafalbielech/Django-RestFramework">Github</a>, executing on home
+                    network deployed with Gunicorn and Nginx.
+                </div>
+
+                <div class="social-icons mt-2">
+                    <a class="social-icon" title="Project page" target="_blank"
+                        href="https://rafalbielech.github.io/projects/"><i class="fab fas fa-laptop-code"></i></a>
+                    <a class="social-icon" title="GitHub" target="_blank"
+                        href="https://github.com/rafalbielech/Django-RestFramework"><i class="fab fa-github"></i></a>
+                </div>
+
+                <div class="text-muted mt-5 mb-2">This project was designed to operate home-grown surveillance system
+                    and collect node parameters (running on Raspberry PI 3b+ and Ubuntu Server) while maintaining
+                    microservice architecture. This enables surveillance system to be incorporated with Siri, Alexa, and
+                    other virtual assistants because authentication is done using JWT. A seperate <a target="_blank"
+                        href="https://github.com/rafalbielech/Django-Home-application">web portal</a> was built to
+                    operate and visualize parameters.</div>
+
+                <div class="subheading text-primary mb-1">Programming Languages, Tools & Platforms</div>
+                <ul class="list-inline dev-icons">
+                    <li class="list-inline-item"><i class="fab fa-python"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-html5"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-css3-alt"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-js-square"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-ubuntu"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-raspberry-pi"></i></li>
+
+                </ul>
+
+            </div>
+        </section>
+        <hr class="m-0" />
+        <section class="information-section" id="documentation">
+            <div class="information-section-content">
+                <h2 class="mb-2">Web portal & Documentation</h2>
+                <hr>
+                <div class="d-flex mb-5">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <h5>API documentation</h5>
+
+                            <p>RF documentation was done with Swagger which enables interacting with the routes in the
+                                web portal. The application was built with Basic and Bearer authentication and anyone
+                                can either log in or provide their Bearer token to see results for each route.</p>
+                            <p>/camera route is responsible for starting/stopping and providing supporting information
+                                like when history of detections, commands, and messages (messages are a way to store
+                                information from the working threads when RTSP capture has to reset and other
+                                information).</p>
+                            <p>/parameter is responsible for saving and retrieving general node parameters like CPU
+                                utilization, temp, memory etc but also information pertaining to internet speed. </p>
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <img src="./assets/img/main_screen.jpg" class="img-fluid" style="object-fit: cover"
+                                alt="Responsive image">
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-6 mb-2 mt-2 ">
+                            <h5>Passing in parameters</h5>
+                            <p><b>Swagger</b> makes it simple to add IN-QUERY parameters like "delay" in the adjacent
+                                image which has available values of 0, 15, 30, 90, and 180 seconds. The authentication
+                                tokens are passed by default in the HEADER. </p>
+                            <p></p>
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-6 mb-2 mt-2">
+                            <img src="./assets/img/screen2.jpg" class="img-fluid"
+                                style="max-height : 800px; object-fit: cover" alt="Responsive image">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr class="m-0" />
+        <section class="information-section" id="streamcapture">
+            <div class="information-section-content">
+                <h2 class="mb-2">Capture and Classify</h2>
+                <hr>
+                <div class="d-flex mb-5">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <h6>First steps and history behind this product</h6>
+                            <p>This project started out in 2018, when I was studying about <b>neural networks</b> at
+                                <b>UMass</b> while doing a master's degree in computer science. </p>
+                            <p>Prior to learning about AI, I did a very initial "surveillance" system using <a
+                                    href="https://docs.opencv.org/3.4/d1/dc5/tutorial_background_subtraction.html"
+                                    target="_blank">Background subtraction methods</a> however, I quickly learned that
+                                this was not a good approach because I was getting a lot of notifications when there
+                                were no people detected in the frame. </p>
+                            <p>Thus, the next step was to build a model using pytorch resembling MTCNN architecture and
+                                trained on
+                                <b>Faces in the Wild</b> </p>
+                            <object data="assets/supplemental/27915276_rafal_bielech_final.pdf" type="application/pdf"
+                                width="100%" height="400px">
+                            </object>
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <h6>Real-time facial detection using Ubuntu laptop</h6>
+                            <p>In below video, is my implementation of facial detection running on a news video about
+                                Black Friday. </p>
+                            <video width="100%" height="auto" controls>
+                                <source src="assets/img/supplemental/black_friday_output.mp4" type=video/mp4> </video>
+                                    </div> <div class="col-12 col-lg-12 col-xl-12 mb-2">
+                                <h6>Classifying frames</h6>
+                                <p>Raspberry PI is a constrained environment, thus, I opted for a highly optimized
+                                    single shot detector: <a href="https://arxiv.org/abs/1512.02325" target="_blank">you
+                                        can read about it here</a></p>
+                                <p>I am currently using a combination of <b>Raspberry PI camera module v2</b> and IP
+                                    cameras
+                                    that I access over <b>RTSP protocol</b>. One particular issue that I came across
+                                    trying to
+                                    get feed from RTSP is that the capture feed gets corrupted sometimes, while using
+                                    <b>OpenCv2
+                                        VideoCapture method</b>. I initially approached this issue by restarting the
+                                    thread with a
+                                    a capture worker, and then if there is a corruption, close the thread and start a
+                                    new thread. However, I learned that this is not a good solution because it is more
+                                    system exhaustive compare to using a while function that just restarts after the
+                                    video capture corrupts. </p>
+                                <p>Putting this all together, the executing the <b>/start</b> route starts a new process
+                                    executes on the host machine. The process's PID gets saved into the database, so
+                                    that it can be used to later kill the process when I execute the <b>/stop</b> route.
+                                </p>
+                                <p>The new process starts several new threads, one thread is in charge of capturing
+                                    video feed and saves the frame into a Input Queue (size 1) if the Queue is empty. A
+                                    separate thread (detection thread) reads the Queue and runs the frame through a
+                                    person detection model that either returns True or False if people are detected in
+                                    the frame. If a person is detected, then the frame is saved to the hard disk and the
+                                    path to the frame is then saved to the detection Queue. A separate thread then reads
+                                    the detection Queue, if there is more than minimum amount of detections in the
+                                    queue, then all of the images are loaded into email (using django email module) and
+                                    then send out and frames deleted and respective items are deleted from the detection
+                                    Queue. </p>
+                                <h6>Why Input and Detection queue?</h6>
+                                <p>Queues are used to enable multiple capture threads (multiple RTSP cameras) being able
+                                    to write to the same queue without having to start new threads for detection.
+                                    Separating capture and detection helps in reducing the number of video capture
+                                    corruptions.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr class="m-0" />
+        <section class="information-section" id="djangomodels">
+            <div class="information-section-content">
+                <h2 class="mb-2">Django models and authentication</h2>
+                <hr>
+                <div class="d-flex mb-5">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <h6>Django models to store information in database</h6>
+                            <p>I am using django models to store information regarding surveillance status, camera
+                                detections, thread processes information, parameters and other information.</p>
+                            <p>I manage Access Tokens in a separate table that I am able to quickly access using the
+                                django admin console. </p>
+                            <p>In the code below, for Bearer token I first check whether the token is in the AccessToken
+                                Table, if it is not, then 404 Error is returned. Then, if the token is not valid,
+                                another reason to return 404 Error else, update last used attribute. </p>
+                            <code>
+                                .....
+                                if "Bearer" in token_list:
+                                obj = get_object_or_404(AccessToken, access_token=token_list[1])
+
+                                if not obj.valid:
+                                raise PermissionDenied()
+                                else:
+                                " Get the originator & update last_used date "
+                                obj.last_used = datetime.datetime.now()
+                                obj.save()
+                                elif "Basic" in token_list:
+                                originator = request.user
+                                except:
+                                        raise PermissionDenied()
+                                ........
+                            </code>
+                            <p></p>
+                        </div>
+                        <div class="col-12 col-lg-6 col-xl-6 mb-4">
+                            <img src="./assets/img/JWT.png" class="img-fluid" style="object-fit: cover"
+                                alt="Responsive image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+
 </html>
